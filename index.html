@@ -74,7 +74,7 @@ function res(k){
  else if(k=="stock-fixed"){L=R.filter(function(r){return r.sx});t="すぐ届く号数指定のリング";note="号数を選んですぐにお届けできるラウンドリングだよ！";}
  else if(k=="stock"){L=R.filter(function(r){return r.stock});t="すぐ届くリング";note="在庫があるので、ご注文後すぐにお届けできます。";}
  else if(k=="free"){L=R.filter(function(r){return r.free});t="フリーサイズで選べるリング";note="サイズを調整できるフリーサイズのリングたちだよ！";more=[B+"/collections/solovalring","ソルオーバルリングをもっと見る"];}
- else if(k=="order"){L=R.filter(function(r){return r.order&&!r.stock});t="自分の号数で作るリング";note="受注制作で、あなたの号数に仕上げてお届けします。";more=[B+"/collections/sol-oval-ring-1","ソルシリーズをもっと見る"];}
+ else if(k=="order"){L=R.filter(function(r){return r.order&&!r.stock&&!r.free});t="自分の号数で作るリング";note="受注制作で、あなたの号数に仕上げてお届けします。";more=[B+"/collections/sol-oval-ring-1","ソルシリーズをもっと見る"];}
  else if(k.indexOf("c-")==0){var c=k.slice(2);L=R.filter(function(r){return r.c==c});t=COLOR[c]+"のリング";te=tr(COLOR[c]).toLowerCase()+" rings";}
  else if(k.indexOf("m-")==0){var m=k.slice(2);L=R.filter(function(r){return r.mt.indexOf(m)>=0});t=MT[m]+"で選べるリング";te="rings in "+tr(MT[m]).toLowerCase();if(m!="silver")note="ダブルミルアームリングのゴールド・ピンクゴールドは11月中旬頃のお届けです。";}
  else if(k.indexOf("b-")==0){var b=+k.slice(2);L=R.filter(function(r){return r.m.indexOf(b)>=0});t=b+"月の誕生石　"+BS[b];te=MON[b]+" birthstones: "+tr(BS[b]);if(MC[b])more=[B+"/collections/"+MC[b],b+"月の誕生石をもっと見る"];}
