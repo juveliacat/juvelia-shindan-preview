@@ -76,7 +76,7 @@ function res(k){
  return {t:t,L:L.slice(0,6),more:more,note:note};
 }
 var app=document.getElementById("jvs-app"),hist=[];
-function esc(s){return String(s).replace(/[&<>"]/g,function(c){return{"&":"&","<":"<",">":">",'"':"""}[c]})}
+function esc(s){return String(s).replace(/[&<>"]/g,function(c){return"&"+{"&":"amp","<":"lt",">":"gt",'"':"quot"}[c]+";"})}
 var tmr;
 function draw(h,say){clearInterval(tmr);app.innerHTML='<div class="jvs-fade">'+h+'</div>';var top=document.getElementById("jvs-shindan").getBoundingClientRect().top;if(top<0)window.scrollBy(0,top-10);
  var el=app.querySelector(".jvs-say");if(el&&say){var i=0;el.textContent="";tmr=setInterval(function(){el.textContent=say.slice(0,++i);if(i>=say.length)clearInterval(tmr)},45)}}
