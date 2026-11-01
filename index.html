@@ -46,6 +46,7 @@
 .jvs-one img{width:100%;aspect-ratio:1/1;object-fit:cover;display:block;border-bottom:3px solid var(--tx)}
 .jvs-one h4{margin:12px 12px 4px;font-size:16px;font-weight:normal;line-height:1.5}
 .jvs-one p{margin:0 12px 12px;font-size:12px;line-height:1.7;color:#6E6780}
+.jvs-cn{font-weight:normal}.jvs-sw{display:inline-block;width:10px;height:10px;border:1.5px solid var(--tx);margin-right:5px;vertical-align:-1px}.jvs-chip.dim{opacity:.4}.jvs-crow .jvs-chip.on:before{content:''}.jvs-crow .jvs-chip.on{box-shadow:2px 2px 0 var(--ad),0 0 0 2px #fff inset}
 .jvs-fade{animation:jvsf .3s steps(4)}@keyframes jvsf{from{opacity:0}}
 </style>
 <div id="jvs-app"></div>
@@ -61,6 +62,7 @@ function tr(j){if(EN[j])return EN[j];var m=j.match(/^(\d+)月$/);if(m)return MON
 function en(j){var e=tr(j);return e?'<span class="jvs-en">'+e+'</span>':''}
 var LN=[["ソルオーバル","ソルオーバルリング","Sol Oval"],["ソルペア","ソルペアシェイプリング","Sol Pear Shape"],["ソルハート","ソルハートリング","Sol Heart"],["ソルスクエア","ソルスクエアリング","Sol Square"],["スタジアム","スタジアムリング","Stadium"],["ダブルミル","ダブルミルアームリング","Double Mill Arm"],["スノー","スノーリング","Snow"],["バブルウォール","バブルウォールレクタングルSリング","Bubble Wall"],["ガレット","ガレットリング","Galette"],["プラネット","プラネットペアシェイプリング","Planet Pear Shape"],["カルテット","カルテットリング","Quartetto"],["カレイド","カレイドスコープリング","Kaleidoscope"],["フルムーン","フルムーンリング","Fullmoon"],["ラウンド","ラウンドリング","Round"]];
 function lnOf(n){for(var i=0;i<LN.length;i++)if(n.indexOf(LN[i][0])>=0)return i;return -1}
+var SW={red:'#D9534F',pink:'#F4A7C3',blue:'#6FA8DC',green:'#7FBF7F',yellow:'#F2C14E',white:'linear-gradient(135deg,#fff,#E6DDF5,#D8F0F5)',purple:'#6B4E9B'};
 var MC={1:"1-january",2:"2-february",6:"6-june",7:"7-july",8:"8-august",9:"9-september",11:"11-november",12:"12-december"};
 var Q={
  start:{q:"気になるものは？",o:[["リング","ring"],["ジュエリーボックス","box"],["ぬいぐるみ","r:plush"],["雑貨","goods"],["あなたにぴったりのひとつを見つける","one1","心理テストで秘宝をひとつ"]]},
@@ -106,7 +108,7 @@ function res(k){
  if(!more&&L.length>6)more=[B+"/collections/all","すべての商品を見る"];
  return {t:t,te:te||tr(t),L:L,note:note};
 }
-var app=document.getElementById("jvs-app"),hist=[],FL='all';
+var app=document.getElementById("jvs-app"),hist=[],FL='all',FC='all';
 function esc(s){return String(s).replace(/[&<>"]/g,function(c){return"&"+{"&":"amp","<":"lt",">":"gt",'"':"quot"}[c]+";"})}
 var tmr;
 function draw(h,say,sayen){clearInterval(tmr);app.innerHTML='<div class="jvs-fade">'+h+'</div>';var top=document.getElementById("jvs-shindan").getBoundingClientRect().top;if(top<0)window.scrollBy(0,top-10);
@@ -118,13 +120,19 @@ var LINES={start:"ようこそ、ジュベリアの宝物庫へ。まずは、�
 function ask(id){var n=Q[id],step=hist.length;var h=hud('STAGE '+step+'/'+tot())+'<div class="jvs-win"><span class="jvs-name">JUVELIA</span><p class="jvs-say"></p><p class="jvs-sayen"></p></div><div class="jvs-menu" style="'+(n.grid?'grid-template-columns:1fr 1fr':'')+'">';
  n.o.forEach(function(o,i){h+='<button class="jvs-opt'+(i?'':' sel')+(o[1]=='one1'?' sp':'')+'" data-go="'+o[1]+'">'+o[0]+en(o[0])+(o[2]?'<small>'+o[2]+'<br>'+tr(o[2])+'</small>':'')+'</button>'});
  draw(h+'</div><div class="jvs-nav"><button class="jvs-link" data-back="1">◀ もどる<span class="jvs-en">Back</span></button><button class="jvs-link" data-home="1">さいしょから<span class="jvs-en">From the top</span></button></div>',LINES[id],tr(LINES[id]));}
-function show(k){FL='all';var r=res(k);var h=hud('CLEAR')+'<p class="jvs-get">GET!</p><div class="jvs-win"><span class="jvs-name">TREASURE</span><p class="jvs-say"></p><p class="jvs-sayen"></p></div><div class="jvs-grid">';
+function show(k){FL='all';FC='all';var r=res(k);var h=hud('CLEAR')+'<p class="jvs-get">GET!</p><div class="jvs-win"><span class="jvs-name">TREASURE</span><p class="jvs-say"></p><p class="jvs-sayen"></p></div><div class="jvs-grid">';
  if(!r.L.length)h+='<p style="grid-column:1/3;text-align:center;font-size:13px">ただいま準備中。お気軽にお問い合わせください。<br><span class="jvs-en">Coming soon. Feel free to contact us.</span></p>';
- var isR=r.L.length&&r.L[0].tx!==undefined;if(isR){var cnt={};r.L.forEach(function(p){var k=lnOf(p.n);cnt[k]=(cnt[k]||0)+1});var ks=Object.keys(cnt).map(Number).sort(function(a,b){return a-b});if(ks.length>1){h+='<div class="jvs-chips" style="grid-column:1/3"><button class="jvs-chip on" data-ln="all">すべて（'+r.L.length+'）<span class="jvs-en">All</span></button>';ks.forEach(function(k){h+='<button class="jvs-chip" data-ln="'+k+'">'+(k<0?'そのほか':LN[k][1])+'（'+cnt[k]+'）<span class="jvs-en">'+(k<0?'Others':LN[k][2])+'</span></button>'});h+='</div>';}}
- r.L.forEach(function(p,i){h+='<div class="jvs-card" data-l="'+lnOf(p.n)+'" style="'+(i>=6?'display:none;':'')+'animation-delay:'+(0.4+(i%6)*0.15)+'s"><img loading="lazy" src="'+p.img+'" alt="'+esc(p.n)+'"><p>'+esc(p.n)+(p.bw?'<small class="jvs-wait">お届けまで少しお時間をいただきます<br>Takes a little time to ship</small>':'')+'</p><a class="jvs-btn" href="'+B+'/products/'+p.h+'">詳しく見る<span class="jvs-en">View details</span></a></div>'});
+ var isR=r.L.length&&r.L[0].tx!==undefined;if(isR){var cnt={};r.L.forEach(function(p){var k=lnOf(p.n);cnt[k]=(cnt[k]||0)+1});var ks=Object.keys(cnt).map(Number).sort(function(a,b){return a-b});if(ks.length>1){h+='<div class="jvs-chips" style="grid-column:1/3"><button class="jvs-chip on" data-ln="all"><b class="jvs-cn">すべて（'+r.L.length+'）</b><span class="jvs-en">All</span></button>';ks.forEach(function(k){h+='<button class="jvs-chip" data-ln="'+k+'"><b class="jvs-cn">'+(k<0?'そのほか':LN[k][1])+'（'+cnt[k]+'）</b><span class="jvs-en">'+(k<0?'Others':LN[k][2])+'</span></button>'});h+='</div>';}var cc={};r.L.forEach(function(p){cc[p.c]=(cc[p.c]||0)+1});var cks=Object.keys(COLOR).filter(function(k){return cc[k]});if(cks.length>1){h+='<div class="jvs-chips jvs-crow" style="grid-column:1/3"><button class="jvs-chip on" data-fc="all"><b class="jvs-cn">すべて（'+r.L.length+'）</b><span class="jvs-en">All colors</span></button>';cks.forEach(function(k){h+='<button class="jvs-chip" data-fc="'+k+'"><b class="jvs-cn"><i class="jvs-sw" style="background:'+SW[k]+'"></i>'+COLOR[k]+'（'+cc[k]+'）</b><span class="jvs-en">'+tr(COLOR[k])+'</span></button>'});h+='</div>';}}
+ r.L.forEach(function(p,i){h+='<div class="jvs-card" data-c="'+(p.c||'')+'" data-l="'+lnOf(p.n)+'" style="'+(i>=6?'display:none;':'')+'animation-delay:'+(0.4+(i%6)*0.15)+'s"><img loading="lazy" src="'+p.img+'" alt="'+esc(p.n)+'"><p>'+esc(p.n)+(p.bw?'<small class="jvs-wait">お届けまで少しお時間をいただきます<br>Takes a little time to ship</small>':'')+'</p><a class="jvs-btn" href="'+B+'/products/'+p.h+'">詳しく見る<span class="jvs-en">View details</span></a></div>'});
  h+='</div>'+(r.L.length>6?'<button class="jvs-more" data-more="1" style="width:calc(100% - 8px);font:inherit;cursor:pointer">▶ もっと見る（のこり'+(r.L.length-6)+'こ）<span class="jvs-en">See more ('+(r.L.length-6)+' left)</span></button>':'');
  draw(h+'<div class="jvs-nav"><button class="jvs-link" data-back="1">◀ もどる<span class="jvs-en">Back</span></button><button class="jvs-link" data-home="1">もういちど遊ぶ<span class="jvs-en">Play again</span></button></div>',"「"+r.t+"」を見つけた！"+(r.note?" "+r.note:""),"You found "+r.te+"!"+(r.note?" "+r.note.split(" ").map(tr).join(" "):""));}
 var A={};
+function okc(c){return (FL=='all'||c.dataset.l==FL)&&(FC=='all'||c.dataset.c==FC)}
+function refl(){var cards=[].slice.call(app.querySelectorAll('.jvs-card'));var m=cards.filter(function(c){c.style.display='none';return okc(c)});m.slice(0,6).forEach(function(c){c.style.display='';c.style.animation='none';c.offsetHeight;c.style.animation=''});
+ [].forEach.call(app.querySelectorAll('[data-ln]'),function(ch){var v=ch.dataset.ln,n=cards.filter(function(c){return (v=='all'||c.dataset.l==v)&&(FC=='all'||c.dataset.c==FC)}).length;var bb=ch.querySelector('.jvs-cn');bb.innerHTML=bb.innerHTML.replace(/（\d+）/,'（'+n+'）');ch.classList.toggle('dim',!n)});
+ [].forEach.call(app.querySelectorAll('[data-fc]'),function(ch){var v=ch.dataset.fc,n=cards.filter(function(c){return (v=='all'||c.dataset.c==v)&&(FL=='all'||c.dataset.l==FL)}).length;var bb=ch.querySelector('.jvs-cn');bb.innerHTML=bb.innerHTML.replace(/（\d+）/,'（'+n+'）');ch.classList.toggle('dim',!n)});
+ var mb=app.querySelector('[data-more]'),n=m.length-6;if(!mb&&n>0){mb=document.createElement('button');mb.className='jvs-more';mb.dataset.more=1;mb.style.cssText='width:calc(100% - 8px);font:inherit;cursor:pointer';app.querySelector('.jvs-grid').after(mb)}if(mb){if(n>0)mb.innerHTML='▶ もっと見る（のこり'+n+'こ）<span class="jvs-en">See more ('+n+' left)</span>';else mb.remove()}
+ var em=app.querySelector('.jvs-empty');if(!m.length&&!em){em=document.createElement('p');em.className='jvs-empty';em.style.cssText='grid-column:1/3;text-align:center;font-size:13px';em.innerHTML='この組み合わせはただいまありません<span class="jvs-en">Nothing in this combination yet</span>';app.querySelector('.jvs-grid').appendChild(em)}else if(m.length&&em)em.remove()}
 function go(x){hist.push(x);if(x.indexOf("o:")==0){var p=x.slice(2).split(">"),kv=p[0].split("=");A[kv[0]]=kv[1];x=p[1];}
  if(x=="r:one")return one();x.indexOf("r:")==0?show(x.slice(2)):ask(x)}
 function one(){var R=D.rings,pool;
@@ -143,8 +151,8 @@ function one(){var R=D.rings,pool;
  draw(h+nav1(),"あなただけの秘宝を見つけた！","You found a treasure made for you!");}
 function nav1(){return '<div class="jvs-nav"><button class="jvs-link" data-back="1">◀ もどる<span class="jvs-en">Back</span></button><button class="jvs-link" data-retry="1">もう一度うらなう<span class="jvs-en">Try again</span></button></div>'}
 app.addEventListener("click",function(e){var b=e.target.closest("button");if(!b)return;
- if(b.dataset.ln){[].forEach.call(app.querySelectorAll('.jvs-chip'),function(c){c.classList.toggle('on',c==b)});FL=b.dataset.ln;var cr=b.parentNode;cr.scrollTo({left:b.offsetLeft-cr.offsetLeft-(cr.clientWidth-b.offsetWidth)/2,behavior:'smooth'});var m=[].filter.call(app.querySelectorAll('.jvs-card'),function(c){var ok=FL=='all'||c.dataset.l==FL;c.style.display='none';return ok});m.slice(0,6).forEach(function(c){c.style.display='';c.style.animation='none';c.offsetHeight;c.style.animation=''});var mb=app.querySelector('[data-more]'),n=m.length-6;if(!mb&&n>0){mb=document.createElement('button');mb.className='jvs-more';mb.dataset.more=1;mb.style.cssText='width:calc(100% - 8px);font:inherit;cursor:pointer';app.querySelector('.jvs-grid').after(mb)}if(mb){if(n>0)mb.innerHTML='▶ もっと見る（のこり'+n+'こ）<span class="jvs-en">See more ('+n+' left)</span>';else mb.remove()}return;}
- if(b.dataset.more){var hid=[].filter.call(app.querySelectorAll('.jvs-card'),function(c){return c.style.display=='none'&&(FL=='all'||c.dataset.l==FL)});hid.slice(0,6).forEach(function(c){c.style.display=''});var n=hid.length-6;if(n>0)b.innerHTML='▶ もっと見る（のこり'+n+'こ）<span class="jvs-en">See more ('+n+' left)</span>';else b.remove();return;}
+ if(b.dataset.ln||b.dataset.fc){var row=b.parentNode;[].forEach.call(row.children,function(c){c.classList.toggle('on',c==b)});if(b.dataset.ln)FL=b.dataset.ln;else FC=b.dataset.fc;row.scrollTo({left:b.offsetLeft-row.offsetLeft-(row.clientWidth-b.offsetWidth)/2,behavior:'smooth'});refl();return;}
+ if(b.dataset.more){var hid=[].filter.call(app.querySelectorAll('.jvs-card'),function(c){return c.style.display=='none'&&okc(c)});hid.slice(0,6).forEach(function(c){c.style.display=''});var n=hid.length-6;if(n>0)b.innerHTML='▶ もっと見る（のこり'+n+'こ）<span class="jvs-en">See more ('+n+' left)</span>';else b.remove();return;}
  if(b.dataset.retry){home();A={};go('start');go('one1');return;}
  if(b.dataset.go)go(b.dataset.go);else if(b.dataset.home)home();else if(b.dataset.back){hist.pop();var p=hist.pop();p?go(p):home();}});
 home();window.jvsGo=function(a){home();a.forEach(go)};
