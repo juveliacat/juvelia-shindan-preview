@@ -78,7 +78,7 @@ function res(k){
  else if(k.indexOf("bb-")==0){var x=+k.slice(3);L=D.bx.filter(function(b){return b.m.indexOf(x)>=0});t=x+"月の誕生石のボックス";}
  else if(k=="box-ring"){L=D.ringbox;t="リングを飾るボックス";more=[B+"/collections/hexagon-state-guest-ring-box","国賓ボックスをもっと見る"];}
  else if(k=="box-big"){L=D.bigbox;t="たっぷり入る宝石箱";more=[B+"/collections/heart-box","ハートボックスをもっと見る"];}
- else if(k=="plush"){L=D.plush;t="じゅべねこちゃんたち";more=[B+"/collections/ぬいぐるみ","ぬいぐるみをもっと見る"];}
+ else if(k=="plush"){L=D.plush;t="じゅべねこちゃんたち";note="国内なら1〜3日でお届けできるよ！";more=[B+"/collections/ぬいぐるみ","ぬいぐるみをもっと見る"];}
  else if(k=="g-gacha"){L=D.goods.filter(function(g){return g.n.indexOf("ガチャ")>=0});t="ジュベリアのガチャ";more=[B+"/collections/gacha","ガチャをもっと見る"];}
  else if(k=="g-paper"){L=D.goods.filter(function(g){return g.n.indexOf("ガチャ")<0});t="じゅべねこの雑貨";more=[B+"/collections/juveliacat","じゅべねこちゃんをもっと見る"];}
  if(!more&&L.length>6)more=[B+"/collections/all","すべての商品を見る"];
